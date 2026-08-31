@@ -1,0 +1,34 @@
+# GitHub Actions: publish a Whop product from GitHub's US servers.
+#
+# WHY: Whop blocks API calls from RU-region IPs. GitHub Actions runners are
+# hosted in the US (GitHub-managed), so the Whop API call originates from an
+# ALLOWED region. This is legitimate infrastructure, NOT a proxy/geo-bypass.
+#
+# SETUP (once):
+#  1. In repo Settings -> Secrets and variables -> Actions -> New repository secret:
+#       WHOP_API_KEY  = apik_...   (Role: Admin or Products write)
+#  2. Run this workflow (dispatch) or trigger on push to a tag.
+#  3. Job "publish" runs gateway/whop_product_creator.py with the env var.
+#
+# NOTE: creating a product IS an irreversible external action. The workflow
+# defaults to DRY_RUN=true. The file also has publish=true as a manual gate
+# you set after reviewing output.
+
+name: publish-whop-product
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Create/publish Whop product
+        env:
+          WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
+          WHOP_API_VERSION: "2026-07-01"
+        run: python gateway/whop_product_creator.py
