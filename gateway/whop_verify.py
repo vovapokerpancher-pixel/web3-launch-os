@@ -1,4 +1,4 @@
-import json, os, urllib.request, urllib.error, sys
+import json, os, urllib.request, urllib.error
 
 KEY = os.getenv("WHOP_API_KEY", "")
 BASE = "https://api.whop.com/api/v1"
@@ -18,29 +18,13 @@ def call(m, p, d=None):
         return e.code, e.read().decode()[:300]
 
 
-# 1) find the product by route
-st, b = call("GET", "/products")
-data = b.get("data", b if isinstance(b, list) else [])
-target = None
-if isinstance(data, list):
-    for p in data:
-        if (p.get("route") or "").startswith("web3-launch-os") or "web3" in (p.get("title") or "").lower():
-            target = p
-            break
-print("found product:", (target or {}).get("id"), (target or {}).get("route") or "NONE")
-if not target:
-    # fallback: probe IDs we know
-    for pid in ["prod_vCCczg2JZfudM", "prod_7RSQOQ0t6iwDo"]:
-        s, bod = call("GET", "/products/" + pid)
-        if s == 200:
-            print("known product:", bod.get("id"), bod.get("route"))
-    raise SystemExit
-
-pid = target["id"]
-print("product id:", pid, "route:", target.get("route"))
-
-# 2) fetch product detail (apps/experience list if present)
-st2, bod2 = call("GET", "/products/" + pid)
-print("detail keys:", list((bod2 or {}).keys()))
-print("visibility:", (bod2 or {}).get("visibility"), "marketplace:", (bod2 or {}).get("marketplace_status"))
-print("default_plan:", (bod2 or {}).get("default_plan"))
+pid = "prod_K7xUWrvKEnWA6"
+# Get the product and investigate experiences/apps
+st, b = call("GET", f"/products/{pid}")
+print("product title:", b.get("title"), "| route:", b.get("route"))
+# print keys that hint at apps/experiences/files
+for k in b.keys():
+    if "app" in k.lower() or "experienc" in k.lower() or "file" in k.lower() or "delivery" in k.lower() or "post" in k.lower():
+        print("field:", k, "=", str(b.get(k))[:200])
+print("metadata:", b.get("metadata"))
+print("default_plan full:", json.dumps(b.get("default_plan"), ensure_ascii=False))
