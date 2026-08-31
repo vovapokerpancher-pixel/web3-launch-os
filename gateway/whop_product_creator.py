@@ -1,5 +1,5 @@
 """
-Whop product creator вЂ” runs inside GitHub Actions (US runners) so the API call
+Whop product creator — runs inside GitHub Actions (US runners) so the API call
 comes from an allowed region. Official Whop Products API (verified against docs).
 
 Flow (replaces simpler checkout example):
@@ -30,7 +30,7 @@ VERSION = os.getenv("WHOP_API_VERSION", "2026-07-01")
 BASE = "https://api.whop.com/api/v1"
 DRY = os.getenv("DRY_RUN", "true").lower() != "false"
 
-# Publicly hosted deliverable (on this repo's GitHub Pages) вЂ” used as delivery link.
+# Publicly hosted deliverable (on this repo's GitHub Pages) — used as delivery link.
 DELIVERY_URL = "https://vovapokerpancher-pixel.github.io/web3-launch-os/Web3-Launch-OS-v1.0.zip"
 
 PRODUCT = {
@@ -93,14 +93,17 @@ def main():
         return
 
     st, body = call("POST", "/products", PRODUCT)
-    print("create product:", st, str(body)[:400])
+    print("create product:", st, str(body)[:600])
     if st not in (200, 201):
+        # fall back to reading what happened
+        stl, bl = call("GET", "/products")
+        print("existing products list status:", stl, str(bl)[:400])
         return
-    pid = body.get("id")
+    pid = body.get("id", body.get("data", {}).get("id"))
     print("product id:", pid)
 
     st2, b2 = call("POST", f"/products/{pid}/publish", {})
-    print("publish:", st2, str(b2)[:200])
+    print("publish:", st2, str(b2)[:400])
 
 
 if __name__ == "__main__":
