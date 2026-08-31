@@ -1,0 +1,20 @@
+name: comments-cover
+on:
+  workflow_dispatch:
+jobs:
+  cover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Fetch cover image
+        run: curl -sL -o cover.png "https://raw.githubusercontent.com/${{ github.repository }}/main/commands/landing/img/infographic_hero.png"
+      - name: Set product cover
+        env:
+          WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
+          WHOP_API_VERSION: "2026-07-01"
+          COVER_IMG: cover.png
+          PRODUCT_ID: prod_0WrqduKEM3TWZ
+        run: python comments/whop_set_cover.py
