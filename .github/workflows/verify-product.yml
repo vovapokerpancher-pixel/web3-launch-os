@@ -2,7 +2,7 @@ name: verify-product
 on:
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write   # needed to commit the dumped file
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -15,4 +15,12 @@ jobs:
         env:
           WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
           WHOP_API_VERSION: "2026-07-01"
-        run: python gateway/whop_verify.py
+        run: |
+          python gateway/whop_verify.py
+      - name: Commit config dump
+        run: |
+          git config user.name "w3los-verify"
+          git config user.email "verify@example.com"
+          git add products_dump.json
+          git commit -m "ci: dump product list" || true
+          git push
