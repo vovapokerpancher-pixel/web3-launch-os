@@ -9,8 +9,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Check all plans
+      - name: Price check
         env:
           WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
           WHOP_API_VERSION: "2026-07-01"
-        run: python comments/all_plans.py
+        run: python comments/price_check.py
