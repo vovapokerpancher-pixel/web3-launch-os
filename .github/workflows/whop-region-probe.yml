@@ -1,0 +1,20 @@
+name: whop-region-probe
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Test Whop region access (read-only, no secret)
+        run: |
+          curl -s -o probe.json -w "HTTP:%{http_code}\n" \
+            -H "Authorization: Bearer DUMMY_NOSECRET" \
+            -H "Api-Version-Date: 2026-07-01" \
+            https://api.whop.com/api/v1/accounts/me || true
+          echo "--- response ---"
+          head -c 400 probe.json || true
