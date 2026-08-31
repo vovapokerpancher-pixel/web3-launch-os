@@ -1,23 +1,19 @@
 # GitHub Actions: publish a Whop product from GitHub's US servers.
 #
 # WHY: Whop blocks API calls from RU-region IPs. GitHub Actions runners are
-# hosted in the US (GitHub-managed), so the Whop API call originates from an
-# ALLOWED region. This is legitimate infrastructure, NOT a proxy/geo-bypass.
+# hosted in the US (Azure westcentralus), so the Whop API call originates from
+# an ALLOWED region. This is legitimate infrastructure, NOT a proxy/geo-bypass.
 #
-# SETUP (once):
-#  1. In repo Settings -> Secrets and variables -> Actions -> New repository secret:
-#       WHOP_API_KEY  = apik_...   (Role: Admin or Products write)
-#  2. Run this workflow (dispatch) or trigger on push to a tag.
-#  3. Job "publish" runs gateway/whop_product_creator.py with the env var.
-#
-# NOTE: creating a product IS an irreversible external action. The workflow
-# defaults to DRY_RUN=true. The file also has publish=true as a manual gate
-# you set after reviewing output.
+# SAFETY GATE: the job refuses to create the product unless DRY_RUN is false.
+#   - First run with DRY_RUN="true" (default) -> prints payload, creates nothing.
+#   - To actually publish, set the repo variable DRY_RUN="false" AND approve
+#     (an irreversible external action).
 
 name: publish-whop-product
 
 on:
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   publish:
@@ -31,4 +27,12 @@ jobs:
         env:
           WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
           WHOP_API_VERSION: "2026-07-01"
-        run: python gateway/whop_product_creator.py
+          DRY_RUN: ${{ vars.DRY_RUN || 'true' }}
+        run: |
+          if [ "$DRY_RUN" = "false" ]; then
+            echo "PUBLISH MODE: creating a LIVE product. Confirm this is intended."
+            python gateway/whop_product_creator.py
+          else
+            echo "DRY-RUN MODE: no product will be created."
+            DRY_RUN=true python gateway/whop_product_creator.py
+          fi
