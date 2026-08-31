@@ -1,0 +1,17 @@
+name: antislopp-create
+on:
+  workflow_dispatch:
+jobs:
+  create:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Create anti-slop product
+        env:
+          WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
+          WHOP_API_VERSION: "2026-07-01"
+          DRY_RUN: "false"
+        run: python antislopp/whop_create.py
