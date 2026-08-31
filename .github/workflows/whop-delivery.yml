@@ -1,0 +1,25 @@
+name: whop-delivery
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  delivery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Download deliverable zip
+        run: |
+          curl -sL -o Web3-Launch-OS-v1.0.zip \
+            "https://raw.githubusercontent.com/${{ github.repository }}/main/Web3-Launch-OS-v1.0.zip"
+          ls -la Web3-Launch-OS-v1.0.zip
+      - name: Upload zip to Whop (delivery)
+        env:
+          WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
+          WHOP_API_VERSION: "2026-07-01"
+          DELIVERY_ZIP: Web3-Launch-OS-v1.0.zip
+          PRODUCT_ID: prod_K7xUWrvKEnWA6
+        run: python gateway/whop_upload_delivery.py
