@@ -20,17 +20,28 @@ def call(m, p, d=None):
 
 st, b = call("GET", "/products")
 data = b.get("data", b if isinstance(b, list) else [])
-rows = []
-if isinstance(data, list):
-    for p in data:
-        rows.append({
-            "id": p.get("id"),
-            "title": p.get("title"),
-            "created_at": p.get("created_at"),
-            "visibility": p.get("visibility"),
-            "plan": (p.get("default_plan") or {}).get("id"),
-            "marketplace": p.get("marketplace_status"),
+if not isinstance(data, list):
+    print("list not array", str(data)[:200])
+    raise SystemExit
+
+# Candidate IDs we created across runs (from logs).
+candidates = ["prod_vCCczg2JZfudM", "prod_7RSQOQ0t6iwDo", "prod_5aAAYSbS9Z0fQ", "prod_MBlkJw0TRdplG"]
+out = []
+for pid in candidates:
+    s, body = call("GET", "/products/" + pid)
+    if s == 200:
+        out.append({
+            "id": body.get("id"),
+            "title": body.get("title"),
+            "visibility": body.get("visibility"),
+            "route": body.get("route"),
+            "created_at": body.get("created_at"),
+            "marketplace": body.get("marketplace_status"),
+            "default_plan": (body.get("default_plan") or {}).get("id"),
         })
-with open("products_dump.json", "w", encoding="utf-8") as fh:
-    json.dump({"count": len(rows) if isinstance(data, list) else None, "products": rows}, fh, ensure_ascii=False, indent=2)
-print("dumped", len(rows), "rows to products_dump.json")
+    else:
+        out.append({"id": pid, "status": s})
+
+with open("my_candidates.json", "w", encoding="utf-8") as fh:
+    json.dump(out, fh, ensure_ascii=False, indent=2)
+print(json.dumps(out, ensure_ascii=False, indent=2))
