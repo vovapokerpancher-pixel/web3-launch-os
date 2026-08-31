@@ -32,6 +32,7 @@ DRY = os.getenv("DRY_RUN", "true").lower() != "false"
 
 # Publicly hosted deliverable (on this repo's GitHub Pages) — used as delivery link.
 DELIVERY_URL = "https://vovapokerpancher-pixel.github.io/web3-launch-os/Web3-Launch-OS-v1.0.zip"
+COVER_URL = "https://vovapokerpancher-pixel.github.io/web3-launch-os/assets/cover.png"
 
 PRODUCT = {
     "title": "Web3 Launch OS",
@@ -98,6 +99,10 @@ def main():
         return
     pid = body.get("id", body.get("data", {}).get("id"))
     print("product id:", pid)
+
+    # Some products require a logo before publish. Try setting logo_url via PATCH.
+    stl, bl = call("PATCH", f"/products/{pid}", {"logo_url": COVER_URL})
+    print("set logo via patch:", stl, str(bl)[:200])
 
     st2, b2 = call("POST", f"/products/{pid}/publish", {})
     print("publish:", st2, str(b2)[:400])
