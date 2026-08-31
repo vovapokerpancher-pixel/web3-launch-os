@@ -15,15 +15,16 @@ def call(m, p, d=None):
         with urllib.request.urlopen(r, timeout=60) as resp:
             return resp.status, json.loads(resp.read().decode() or "{}")
     except urllib.error.HTTPError as e:
-        return e.code, e.read().decode()[:300]
+        return e.code, e.read().decode()[:400]
 
 
-st, b = call("GET", "/permissions")
-print("PERMISSIONS:", st, str(b)[:500])
-
-st2, b2 = call("GET", "/products/prod_1mUCdlGTh02r9/experiences")
-print("EXPERIENCES:", st2, str(b2)[:200])
-
-# Also check what the key can do on the account
-st3, b3 = call("GET", "/accounts/me")
-print("ACCOUNT:", st3, str(b3)[:200])
+for label, path in [
+    ("ACCOUNT_ME", "/accounts/me"),
+    ("PRODUCTS", "/products"),
+    ("COMPANY", "/company"),
+    ("COMPANY_BALANCE", "/company/balance"),
+    ("FILES", "/files"),
+    ("PLANS", "/plans"),
+]:
+    st, b = call("GET", path)
+    print(label, st, str(b)[:180])
