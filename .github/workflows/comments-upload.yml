@@ -1,0 +1,20 @@
+name: comments-upload
+on:
+  workflow_dispatch:
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Download zip
+        run: curl -sL -o 99.zip "https://raw.githubusercontent.com/${{ github.repository }}/main/comments/99-AI-Image-Commands-v1.0.zip"
+      - name: Upload to Whop
+        env:
+          WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
+          WHOP_API_VERSION: "2026-07-01"
+          DELIVERY_ZIP: 99.zip
+          PRODUCT_ID: prod_0WrqduKEM3TWZ
+        run: python comments/whop_upload.py
