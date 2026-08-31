@@ -44,9 +44,6 @@ PRODUCT = {
         "Not financial advice; does not guarantee token price or revenue."
     ),
     "custom_cta": "get_access",
-    "gallery_images": [
-        {"url": "https://vovapokerpancher-pixel.github.io/web3-launch-os/assets/cover.png"}
-    ],
     "labels": ["web3", "growth", "template"],
     # one-time $19 plan
     "default_plan": {
