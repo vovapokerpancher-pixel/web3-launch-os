@@ -20,10 +20,17 @@ def call(m, p, d=None):
 
 st, b = call("GET", "/products")
 data = b.get("data", b if isinstance(b, list) else [])
-print("count", len(data) if isinstance(data, list) else str(data)[:200])
+rows = []
 if isinstance(data, list):
     for p in data:
-        title = p.get("title") or ""
-        if "Web3" in title or "Launch" in title:
-            plan = (p.get("default_plan") or {})
-            print(p.get("id"), "|", title, "|", p.get("created_at"), "|", p.get("visibility"), "| plan:", plan.get("id"))
+        rows.append({
+            "id": p.get("id"),
+            "title": p.get("title"),
+            "created_at": p.get("created_at"),
+            "visibility": p.get("visibility"),
+            "plan": (p.get("default_plan") or {}).get("id"),
+            "marketplace": p.get("marketplace_status"),
+        })
+with open("products_dump.json", "w", encoding="utf-8") as fh:
+    json.dump({"count": len(rows) if isinstance(data, list) else None, "products": rows}, fh, ensure_ascii=False, indent=2)
+print("dumped", len(rows), "rows to products_dump.json")
