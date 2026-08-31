@@ -9,8 +9,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Check product
+      - name: Check permissions
         env:
           WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
           WHOP_API_VERSION: "2026-07-01"
-        run: python comments/whop_check.py
+        run: python comments/permcheck.py
