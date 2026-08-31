@@ -45,7 +45,7 @@ PRODUCT = {
     ),
     "custom_cta": "get_access",
     "gallery_images": [
-        "https://vovapokerpancher-pixel.github.io/web3-launch-os/assets/cover.png"
+        {"url": "https://vovapokerpancher-pixel.github.io/web3-launch-os/assets/cover.png"}
     ],
     "labels": ["web3", "growth", "template"],
     # one-time $19 plan
