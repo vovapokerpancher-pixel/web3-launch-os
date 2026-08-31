@@ -1,0 +1,18 @@
+name: antislopp-deliver
+on:
+  workflow_dispatch:
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Upload ZIP + cover to Whop
+        env:
+          WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
+          WHOP_API_VERSION: "2026-07-01"
+          DELIVERY_ZIP: antislopp/Anti-Slop-Prompt-Kit-v1.0.zip
+          COVER_IMG: antislopp/cover.png
+        run: python antislopp/whop_deliver_cover.py
