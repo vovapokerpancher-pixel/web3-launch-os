@@ -18,11 +18,13 @@ def call(m, p, d=None):
         return e.code, e.read().decode()[:300]
 
 
-pid = "prod_K7xUWrvKEnWA6"
-st, b = call("GET", f"/products/{pid}")
-print("full product keys:", list((b or {}).keys()))
-# look for anything about experiences/apps/delivery/content
-for k in (b or {}).keys():
-    v = b.get(k)
-    if isinstance(v, (list, dict)) and v:
-        print("FIELD", k, "=", json.dumps(v, ensure_ascii=False)[:400])
+st, b = call("GET", "/products")
+data = b.get("data", b if isinstance(b, list) else [])
+for p in (data if isinstance(data, list) else []):
+    if (p.get("route") or "").startswith("web3-launch-os"):
+        print("found:", p.get("id"), "| route:", p.get("route"), "| title:", p.get("title"))
+        print("  keys:", list(p.keys()))
+        # type/kind if present
+        for k in ("type", "kind", "product_type", "content_type"):
+            if k in p:
+                print("  ", k, "=", p.get(k))
