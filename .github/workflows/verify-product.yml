@@ -1,0 +1,18 @@
+name: verify-product
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify Whop product
+        env:
+          WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
+          WHOP_API_VERSION: "2026-07-01"
+        run: python gateway/whop_verify.py
