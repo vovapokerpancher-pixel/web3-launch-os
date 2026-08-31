@@ -19,12 +19,10 @@ def call(m, p, d=None):
 
 
 pid = "prod_K7xUWrvKEnWA6"
-# Get the product and investigate experiences/apps
 st, b = call("GET", f"/products/{pid}")
-print("product title:", b.get("title"), "| route:", b.get("route"))
-# print keys that hint at apps/experiences/files
-for k in b.keys():
-    if "app" in k.lower() or "experienc" in k.lower() or "file" in k.lower() or "delivery" in k.lower() or "post" in k.lower():
-        print("field:", k, "=", str(b.get(k))[:200])
-print("metadata:", b.get("metadata"))
-print("default_plan full:", json.dumps(b.get("default_plan"), ensure_ascii=False))
+print("full product keys:", list((b or {}).keys()))
+# look for anything about experiences/apps/delivery/content
+for k in (b or {}).keys():
+    v = b.get(k)
+    if isinstance(v, (list, dict)) and v:
+        print("FIELD", k, "=", json.dumps(v, ensure_ascii=False)[:400])
