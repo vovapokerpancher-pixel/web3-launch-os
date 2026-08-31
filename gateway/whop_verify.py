@@ -1,4 +1,4 @@
-import json, os, urllib.request, urllib.error, re
+import json, os, urllib.request, urllib.error, sys
 
 KEY = os.getenv("WHOP_API_KEY", "")
 BASE = "https://api.whop.com/api/v1"
@@ -18,22 +18,29 @@ def call(m, p, d=None):
         return e.code, e.read().decode()[:300]
 
 
+# 1) find the product by route
 st, b = call("GET", "/products")
 data = b.get("data", b if isinstance(b, list) else [])
-mine = []
-other = []
+target = None
 if isinstance(data, list):
     for p in data:
-        t = (p.get("title") or "").strip().lower()
-        if "web3 launch os" in t:
-            mine.append({"id": p.get("id"), "title": p.get("title"), "route": p.get("route"),
-                         "created_at": p.get("created_at"), "marketplace": p.get("marketplace_status"),
-                         "visibility": p.get("visibility")})
-        else:
-            other.append(p.get("id"))
-with open("web3_ids.json", "w", encoding="utf-8") as fh:
-    json.dump({"mine": mine, "other_count": len(other), "other_ids": other}, fh, ensure_ascii=False, indent=2)
-print("Web3 Launch OS products:", len(mine))
-for m in mine:
-    print(m["id"], m["route"], m["created_at"][:19], m["marketplace"])
-print("other count", len(other))
+        if (p.get("route") or "").startswith("web3-launch-os") or "web3" in (p.get("title") or "").lower():
+            target = p
+            break
+print("found product:", (target or {}).get("id"), (target or {}).get("route") or "NONE")
+if not target:
+    # fallback: probe IDs we know
+    for pid in ["prod_vCCczg2JZfudM", "prod_7RSQOQ0t6iwDo"]:
+        s, bod = call("GET", "/products/" + pid)
+        if s == 200:
+            print("known product:", bod.get("id"), bod.get("route"))
+    raise SystemExit
+
+pid = target["id"]
+print("product id:", pid, "route:", target.get("route"))
+
+# 2) fetch product detail (apps/experience list if present)
+st2, bod2 = call("GET", "/products/" + pid)
+print("detail keys:", list((bod2 or {}).keys()))
+print("visibility:", (bod2 or {}).get("visibility"), "marketplace:", (bod2 or {}).get("marketplace_status"))
+print("default_plan:", (bod2 or {}).get("default_plan"))
