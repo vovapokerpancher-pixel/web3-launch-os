@@ -1,0 +1,17 @@
+name: antislopp-edit
+on:
+  workflow_dispatch:
+jobs:
+  edit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Edit anti-slop (cover + price check)
+        env:
+          WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
+          WHOP_API_VERSION: "2026-07-01"
+          COVER_IMG: antislopp/cover.png
+        run: python antislopp/whop_edit.py
