@@ -9,8 +9,10 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Gross revenue
+      - name: Growth create (dry-run)
         env:
           WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
           WHOP_API_VERSION: "2026-07-01"
-        run: python comments/gross_rev.py
+          WHOP_ACCOUNT_ID: biz_UJGSjyMgbaNs5W
+          DRY_RUN: "true"
+        run: python comments/growth_create2.py
