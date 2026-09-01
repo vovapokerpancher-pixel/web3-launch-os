@@ -9,10 +9,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Growth create (real)
+      - name: Growth publish
         env:
           WHOP_API_KEY: ${{ secrets.WHOP_API_KEY }}
           WHOP_API_VERSION: "2026-07-01"
-          WHOP_ACCOUNT_ID: biz_UJGSjyMgbaNs5W
-          DRY_RUN: "false"
-        run: python comments/growth_create2.py
+          COVER_IMG: antislopp/growth_cover.png
+        run: python comments/growth_publish.py
