@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Growth Tracker — Dashboard</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600;700&display=swap');
+*{margin:0;box-sizing:border-box}
+body{background:#0A0E17;color:#E6EBF5;font-family:Inter,sans-serif;padding:30px;line-height:1.6}
+.wrap{max-width:900px;margin:0 auto}
+h1{font-family:'Space Grotesk';margin-bottom:4px}
+.sub{color:#AEB9CC;margin-bottom:24px}
+.card{background:#0E1420;border:1px solid #1B2440;border-radius:16px;padding:22px;margin-bottom:20px}
+.card h3{font-family:'Space Grotesk';margin-bottom:10px}
+.kv{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #1B2440;font-size:15px}
+.kv:last-child{border-bottom:none}
+.val{color:#7EB6FF;font-weight:600}
+.empty{color:#6B7A96}
+button{background:#4F6BFF;color:#fff;border:0;padding:10px 16px;border-radius:10px;font-weight:600;cursor:pointer;margin-right:10px}
+.btnline{margin-top:4px;font-size:13px;color:#AEB9CC}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Growth Tracker</h1>
+  <p class="sub">Views + checkout clicks from your landing pages. Tips: add <code>?utm_source=x</code> to a URL to see source.</p>
+  <div class="card">
+    <h3>View this page on the SAME device/browser as your landing to see its data.</h3>
+    <p id="note" class="empty">No data yet — open one of your landing pages first, then return here.</p>
+  </div>
+  <div class="card"><h3>Page views by day</h3><div id="views"><div class="empty">—</div></div></div>
+  <div class="card"><h3>Checkout clicks by day</h3><div id="clicks"><div class="empty">—</div></div></div>
+  <button onclick="download()">Export JSON</button>
+  <button onclick="window.location.reload()">Refresh</button>
+  <div class="btnline">Data is stored locally in your browser (no server, no personal data).</div>
+</div>
+<script>
+function load(){try{return JSON.parse(localStorage.getItem("growth_tracker")||"{}")}catch(e){return{}}}
+function fmt(map){
+  var d=load(); var k=map==="views"?(d.pageviews||{}):(d.clicks||{});
+  var days=Object.keys(k);
+  if(!days.length) return '<div class="empty">—</div>';
+  var html="";
+  days.slice().sort().reverse().forEach(function(day){
+    var items=k[day]||{};
+    var keys=Object.keys(items);
+    var total=keys.reduce(function(s,x){return s+(items[x]||0)},0);
+    html+='<div class="kv"><span>'+day+' (total '+total+')</span></div>';
+    keys.sort(function(a,b){return (items[b]||0)-(items[a]||0)}).slice(0,10).forEach(function(kx){
+      html+='<div class="kv"><span>'+kx+'</span><span class="val">'+items[kx]+'</span></div>';
+    });
+  });
+  return html;
+}
+document.getElementById("views").innerHTML=fmt("views");
+document.getElementById("clicks").innerHTML=fmt("clicks");
+document.getElementById("note").style.display=load().pageviews?"none":"block";
+function download(){
+  var blob=new Blob([JSON.stringify(load(),null,2)],{type:"application/json"});
+  var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="growth_tracker.json";a.click();
+}
+</script>
+</body>
+</html>
