@@ -32,10 +32,14 @@
   record("view");
 
   // Auto-attach to all whop buy links so we capture click source without editing each.
-  document.addEventListener("click", function (e) {
-    var a = e.target && e.target.closest ? e.target.closest("a") : null;
+  // Use capture phase + pointerdown so we record BEFORE the link navigates away.
+  function tap(e) {
+    var el = e.target;
+    var a = (el && el.closest) ? el.closest("a") : null;
     if (a && a.href && a.href.indexOf("whop.com/shopgo") !== -1) {
       record("click", (a.textContent || "checkout").trim().slice(0, 40));
     }
-  });
+  }
+  document.addEventListener("pointerdown", tap, true);
+  document.addEventListener("click", tap, true);
 })();
