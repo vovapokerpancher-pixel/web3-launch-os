@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Growth Tracker — see where your traffic becomes clicks ($5/mo)</title>
+<meta name="description" content="A light analytics subscription that shows which landing pages get views and where people click your checkout link. $5/month.">
+<script src="tracker.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;600;700&display=swap');
+:root{--bg:#0A0E17;--surf:#0E1420;--acc:#4F6BFF;--acc2:#22C55E;--txt:#E6EBF5;--mut:#AEB9CC;--line:#1B2440}
+*{margin:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:Inter,sans-serif;line-height:1.6}
+h1,h2,h3{font-family:'Space Grotesk';line-height:1.08}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+.btn{display:inline-block;background:var(--acc);color:#fff;padding:15px 30px;border-radius:13px;font-weight:700;text-decoration:none;font-size:17px}
+.sec{padding:80px 0}
+.tag{color:var(--acc);font-weight:700;font-size:13px;letter-spacing:.18em;text-transform:uppercase}
+.grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:26px}
+.card .n{font-family:'Space Grotesk';font-size:44px;font-weight:700;color:#7EB6FF;line-height:1}
+.card .l{color:var(--mut);margin-top:6px}
+.hero{min-height:78vh;display:flex;align-items:center;background:radial-gradient(circle at 80% 18%,#4F6BFF2e,#0A0E17 60%)}
+.hero h1{font-size:clamp(2.4rem,5.5vw,3.6rem);margin:14px 0}
+.hero .sub{color:#C7CEE0;font-size:19px;max-width:600px}
+.hero .hold{display:flex;gap:16px;align-items:center;margin-top:24px;flex-wrap:wrap}
+.month{color:var(--acc2);font-weight:600}
+footer{padding:40px 0;border-top:1px solid var(--line);font-size:13px;color:var(--mut)}
+@media(max-width:680px){.hero h1{font-size:2.2rem}}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="tag">Subscription · $5/mo</div>
+    <h1>Growth Tracker</h1>
+    <p class="sub">See which of your landing pages get views and where people click your checkout link. No servers, no personal data — runs in the browser.</p>
+    <div class="hold">
+      <a class="btn" href="https://whop.com/shopgo/growth-tracker-06/" target="_blank" rel="noopener">Subscribe — $5/mo</a>
+      <span class="month">Cancel anytime</span>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="tag">What it tracks</div>
+    <h2 style="margin-bottom:24px">One dashboard, the whole funnel.</h2>
+    <div class="grid">
+      <div class="card"><div class="n">Views</div><div class="l">per landing page, per day</div></div>
+      <div class="card"><div class="n">Source</div><div class="l">utm_source tag on any URL</div></div>
+      <div class="card"><div class="n">Clicks</div><div class="l">on your checkout buttons</div></div>
+      <div class="card"><div class="n">Export</div><div class="l">JSON anytime</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec">
+  <div class="wrap">
+    <div class="tag">How it works</div>
+    <h2 style="margin-bottom:16px">A tiny script + a dashboard. That's it.</h2>
+    <p style="color:var(--mut);max-width:660px">Add <code>tracker.js</code> to any landing page, open the dashboard on the same device, and see views + checkout clicks. Append <code>?utm_source=tiktok</code> to a URL to see where traffic comes from. Deterministic and private — no cookies, no external calls, no personal data.</p>
+  </div>
+</section>
+
+<section class="sec" id="buy">
+  <div class="wrap" style="text-align:center">
+    <div class="tag">Subscription</div>
+    <div style="font-family:'Space Grotesk';font-size:52px;font-weight:700;margin:8px 0">$5 <span style="font-size:20px;color:var(--mut)">/month</span></div>
+    <p style="color:var(--mut);max-width:520px;margin:0 auto 18px">Instant access. Cancel anytime. A reference tool — results depend on your setup.</p>
+    <a class="btn" href="https://whop.com/shopgo/growth-tracker-06/" target="_blank" rel="noopener">Subscribe — $5/mo</a>
+    <p style="color:var(--mut);font-size:13px;margin-top:14px">Also check:
+      <a href="https://whop.com/shopgo/anti-slop-prompt-kit/" style="color:var(--acc)">Anti-Slop</a> ·
+      <a href="https://whop.com/shopgo/99-ai-image-commands-chatgpt-2-0/" style="color:var(--acc)">99 Commands</a> ·
+      <a href="https://whop.com/shopgo/web3-launch-os/" style="color:var(--acc)">Web3 OS</a></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Growth Tracker · $5/mo · Reference tool, not affiliated with OpenAI. Results depend on your setup.</div>
+</footer>
+
+</body>
+</html>
